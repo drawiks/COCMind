@@ -9,7 +9,7 @@ def handle_profile(bot, message):
     user_id = message.from_user.id
     player_data = asyncio.run(get_player(user_id))
 
-    if player_data and player_data[0]:  # player_tag существует
+    if player_data and player_data[0]:
         player_tag = player_data[0]
         asyncio.run(show_profile(bot, message, player_tag))
     else:
@@ -47,15 +47,15 @@ async def show_profile(bot, message, player_tag):
 
     text = f"""🏰 *Профиль игрока:*
 
-👤 Имя: {player_info['name']}
+👑 Ник: {player_info['name']}
 🏷 Тег: {player_info['tag']}
-🎯 Уровень: {player_info['expLevel']}
+
+💎 Уровень: {player_info['expLevel']}
 🏛 Ратуша: {player_info['townHallLevel']}
-👥 Клан: {player_info['clan']['name'] if 'clan' in player_info else 'Без клана'}
+
+🛡 Клан: {player_info['clan']['name'] if 'clan' in player_info else 'Без клана'}
 
 🏆 Трофеи: {player_info['trophies']}
-⚔️ Победы в атаке: {player_info['attackWins']}
-🛡 Победы в защите: {player_info['defenseWins']}
 """
 
     bot.send_message(message.chat.id, text, parse_mode="Markdown")
