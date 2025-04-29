@@ -20,7 +20,7 @@ def register_handlers(bot):
 
     @bot.message_handler(func=lambda message: message.text == "📋 Профиль")
     def open_profile(message):
-        handle_profile(bot, message)  # 🔥 Вызываем обработчик профиля!
+        handle_profile(bot, message)
 
     @bot.message_handler(func=lambda message: message.text == "🏰 Загрузить базу")
     def upload_base(message):
