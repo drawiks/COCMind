@@ -1,17 +1,20 @@
 
 from bot.api.coc_api import get_player_info
 
-from database.db import save_player, get_player
+from database.database import Database
+
+from loguru import logger
 
 import asyncio
 
 def handle_profile(bot, message):
     user_id = message.from_user.id
-    player_data = asyncio.run(get_player(user_id))
+    db = Database()
+    
+    user_tag = db.get_tag(user_id)
 
-    if player_data and player_data[0]:
-        player_tag = player_data[0]
-        asyncio.run(show_profile(bot, message, player_tag))
+    if user_tag:
+        show_profile(bot, message, user_tag)
     else:
         msg = bot.send_message(
             message.chat.id,
@@ -23,23 +26,20 @@ def handle_profile(bot, message):
 def save_tag_and_show_profile(bot, message):
     user_id = message.from_user.id
     player_tag = message.text.strip()
-
-    player_info = asyncio.run(get_player_info(player_tag))
+    
+    db = Database()
+    
+    player_info = get_player_info(player_tag)
 
     if not player_info:
         bot.send_message(message.chat.id, "❗ Ошибка получения профиля. Проверь свой тег!")
         return
 
-    name = player_info['name']
-    town_hall_level = player_info['townHallLevel']
-    exp_level = player_info['expLevel']
+    db.add_user(user_id, player_tag)
+    show_profile(bot, message, player_tag)
 
-    asyncio.run(save_player(user_id, player_tag, name, town_hall_level, exp_level))
-
-    asyncio.run(show_profile(bot, message, player_tag))
-
-async def show_profile(bot, message, player_tag):
-    player_info = await get_player_info(player_tag)
+def show_profile(bot, message, tag):
+    player_info = get_player_info(tag)
 
     if not player_info:
         bot.send_message(message.chat.id, "❗ Ошибка получения профиля. Проверь свой тег!")
@@ -49,13 +49,28 @@ async def show_profile(bot, message, player_tag):
 
 👑 Ник: {player_info['name']}
 🏷 Тег: {player_info['tag']}
-
 💎 Уровень: {player_info['expLevel']}
-🏛 Ратуша: {player_info['townHallLevel']}
 
 🛡 Клан: {player_info['clan']['name'] if 'clan' in player_info else 'Без клана'}
+🎖 Роль в клане: {player_info.get('role', '—')}
 
-🏆 Трофеи: {player_info['trophies']}
+📤 Пожертвовано войск: {player_info.get('donations', '—')}
+📥 Получено войск: {player_info.get('donationsReceived', '—')}
+
+🏡 *Родная деревня*
+
+🎯 Лига: {player_info['league']['name'] if 'league' in player_info else '—'}
+🥇 Лучшие трофеи: {player_info.get('bestTrophies', '—')}
+🏆 Трофеи: {player_info.get('trophies', '—')}
+
+🏛 Ратуша: {player_info['townHallLevel']}
+
+🏗 *Деревня строителя*
+
+🥇 Лучшие трофеи: {player_info.get('bestBuilderBaseTrophies', '—')}
+🏆 Трофеи: {player_info.get('builderBaseTrophies', '—')}
+
+🏛 Дом строителя: {player_info.get('builderHallLevel', '—')}
+
 """
-
     bot.send_message(message.chat.id, text, parse_mode="Markdown")

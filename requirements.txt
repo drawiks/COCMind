@@ -2,6 +2,7 @@
 telebot==0.0.5
 
 aiohttp==3.11.18
+requests==2.32.3
 
 opencv-python==4.11.0.86
 pytesseract==0.3.13
@@ -9,7 +10,6 @@ scikit-learn==1.6.1
 joblib==1.4.2
 pillow==11.2.1
 
-aiosqlite==0.21.0
 sqlalchemy==2.0.40
 
 environs==14.1.1
