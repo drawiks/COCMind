@@ -18,7 +18,7 @@ def get_player_info(player_tag: str):
         if response.status_code == 200:
             return response.json()
         else:
-            logger.error(f"{response.status_code}: {response.text}")
+            logger.error(response.status_code)
             return None
     except requests.RequestException as e:
         logger.error(e)

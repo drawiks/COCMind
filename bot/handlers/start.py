@@ -6,10 +6,10 @@ def register_handlers(bot):
     @bot.message_handler(commands=['start'])
     def start_message(message):
         markup = ReplyKeyboardMarkup(resize_keyboard=True)
-        profile_btn = KeyboardButton("📋 Профиль")
-        upload_btn = KeyboardButton("🏰 Загрузить базу")
-        settings_btn = KeyboardButton("⚙️ Настройки")
-        markup.add(profile_btn, upload_btn, settings_btn)
+        profile_button = KeyboardButton("📋 Профиль")
+        upload_button = KeyboardButton("🏰 Загрузить базу")
+        settings_button = KeyboardButton("⚙️ Настройки")
+        markup.add(profile_button, upload_button, settings_button)
 
         bot.send_message(
             message.chat.id,
