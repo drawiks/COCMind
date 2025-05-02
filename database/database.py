@@ -11,7 +11,7 @@ class Database:
         self.engine = create_engine("sqlite:///cocmind.db")
         self.Session = sessionmaker(self.engine)
         
-    def _init(self):
+    def _init_db(self):
         Base.metadata.create_all(self.engine)
     
     def add_user(self, id, tag) -> None:
@@ -33,3 +33,16 @@ class Database:
                 return object.tag
             else:
                 return None
+            
+    def update_tag(self, id: int, new_tag: str):
+        with self.Session() as session:
+            try:
+                statement = select(UsersBase).where(UsersBase.id == id)
+                object = session.scalars(statement).one_or_none()
+                if object:
+                    object.tag = new_tag
+                    session.merge(object)
+                    session.commit()
+            except Exception as exception:
+                session.rollback()
+                raise exception

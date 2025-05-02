@@ -3,10 +3,6 @@ from bot.api.coc_api import get_player_info
 
 from database.database import Database
 
-from loguru import logger
-
-import asyncio
-
 def handle_profile(bot, message):
     user_id = message.from_user.id
     db = Database()
